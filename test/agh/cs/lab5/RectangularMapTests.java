@@ -14,7 +14,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 public class RectangularMapTests {
-    @Test
+    @Test()
     public void iWordMapTest(){
         RectangularMap testMap = new RectangularMap(10,10);
         Car testCar = new Car(testMap);
@@ -31,7 +31,13 @@ public class RectangularMapTests {
         assertFalse(testMap.canMoveTo(new Position(11,0)));
         assertEquals(testCar,testMap.objectAt(new Position(2,2)));
         Car testCar2 = new Car(testMap,new Position(2,3));
-        assertFalse(testMap.place(testCar));
+        try{
+            testMap.place(testCar);
+        }
+        catch (IllegalArgumentException e){
+
+        }
+
         assertTrue(testMap.isOccupied(new Position(2,3)));
 
         testMap.run(dir);

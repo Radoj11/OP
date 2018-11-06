@@ -1,10 +1,7 @@
 package agh.cs.lab4;
 
-import agh.cs.lab2.MoveDirection;
 import agh.cs.lab2.Position;
 import agh.cs.lab5.AbstractWorldMap;
-
-import java.util.List;
 
 public class RectangularMap extends AbstractWorldMap {
     private final Position max;
@@ -24,27 +21,6 @@ public class RectangularMap extends AbstractWorldMap {
                 return true;
         }
         return false;
-    }
-
-    @Override
-    public void run(List<MoveDirection> directions) {
-        int index=0;
-        int s = this.map.size();
-        int dirSize = directions.size();
-        for(MoveDirection dir : directions){
-            this.map.get(index%s).move(dir);
-            index++;
-
-            try {
-                System.out.println("\r"+this.toString());
-                Thread.currentThread().sleep(200);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            dirSize--;
-            if(dirSize!=0)
-                System.out.println("\033[H\033[2J");
-        }
     }
 
     @Override

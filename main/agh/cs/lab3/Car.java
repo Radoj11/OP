@@ -21,19 +21,25 @@ public class Car implements IMapElement {
     private AbstractWorldMap myLovelyMap;
 
     public static void main(String[] args){
-        List<MoveDirection> directions = new OptionsParser().parse(args);
-        //MoveDirection[] arr = new MoveDirection[directions.size()];
-        List<HayStack> hl = new ArrayList<>();
-        hl.add(new HayStack(new Position(-4,-4)));
-        hl.add(new HayStack(new Position(7,7)));
-        hl.add(new HayStack(new Position(3,6)));
-        hl.add(new HayStack(new Position(2,0)));
-        //IWorldMap map = new RectangularMap(10,10);
-        AbstractWorldMap map = new UnboundedMap(hl);
-        map.place(new Car(map));
-        map.place(new Car(map,new Position(3,4)));
-        //System.out.println(map.toString());
-        map.run(directions);
+        try {
+            List<MoveDirection> directions = new OptionsParser().parse(args);
+            //MoveDirection[] arr = new MoveDirection[directions.size()];
+            List<HayStack> hl = new ArrayList<>();
+            hl.add(new HayStack(new Position(-4, -4)));
+            hl.add(new HayStack(new Position(7, 7)));
+            hl.add(new HayStack(new Position(3, 6)));
+            hl.add(new HayStack(new Position(2, 0)));
+            //IWorldMap map = new RectangularMap(10,10);
+            AbstractWorldMap map = new UnboundedMap(hl);
+            map.place(new Car(map));
+            map.place(new Car(map, new Position(3, 4)));
+            //System.out.println(map.toString());
+            map.run(directions);
+        }
+        catch (IllegalArgumentException ex){
+            System.out.print(ex.getMessage());
+            return;
+        }
     }
 
     public Car(){
