@@ -8,6 +8,7 @@ public class RectangularMap extends AbstractWorldMap {
     private final Position min=new Position(0,0);
 
     public RectangularMap(int width, int height){
+        super();
         this.max=new Position(width,height);
     }
 

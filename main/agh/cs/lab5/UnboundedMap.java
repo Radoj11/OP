@@ -8,6 +8,7 @@ public class UnboundedMap extends AbstractWorldMap {
     private Position max = new Position(Integer.MIN_VALUE,Integer.MIN_VALUE);
 
     public UnboundedMap(List<HayStack> hayList){
+        //super();
         for(HayStack i : hayList){
             this.map.put(i.getPosition(),i);
         }

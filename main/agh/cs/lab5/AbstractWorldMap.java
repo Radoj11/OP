@@ -5,15 +5,19 @@ import agh.cs.lab2.Position;
 import agh.cs.lab3.Car;
 import agh.cs.lab4.MapVisualizer;
 
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 public abstract class AbstractWorldMap {
-    protected Map<Position,IMapElement> map = new LinkedHashMap<>();
-    //protected List<IMapElement> map = new ArrayList<>();
+    protected LinkedHashMap<Position,IMapElement> map = new LinkedHashMap<>();
     protected MapVisualizer mapVisualizer;
+
+    public LinkedHashMap getmap(){
+        return this.map;
+    }
 
     public AbstractWorldMap(){
         this.mapVisualizer = new MapVisualizer(this);
@@ -37,27 +41,32 @@ public abstract class AbstractWorldMap {
             return true;
         }
         else{
-            throw new IllegalArgumentException("this position is already occupied by " + this.objectAt(car.getPosition()));
+            throw new IllegalArgumentException("this position is already occupied by " + this.objectAt(car.getPosition()).getClass());
         }
     }
 
     public void run(List<MoveDirection> directions) { // tutaj trzeba zrobic na map bo lipa :(((((((
-        int index=0;
-        int s = this.map.size();
-        int dirSize = directions.size();
-        for(MoveDirection dir : directions){
-            this.map.get(index%s).move(dir);
-            index++;
+        AtomicInteger index = new AtomicInteger();
+        List<IMapElement> onlyCarList = this.map.values().stream()
+                .filter(el -> el instanceof Car)
+                .collect(Collectors.toList());
+        directions.stream()
+                .forEach(el -> this.runHelper(el,onlyCarList.get(index.getAndIncrement()%onlyCarList.size())));
+    }
 
-            try {
-                System.out.println("\r"+this.toString());
-                Thread.sleep(200);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            dirSize--;
-            if(dirSize!=0)
-                System.out.println("\033[H\033[2J");
+    private void runHelper(MoveDirection dir, IMapElement car){
+        Position oldPosition = car.getPosition();
+        car.move(dir);
+        try {
+            System.out.print("\r"+this.toString());
+            Thread.sleep(200);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        System.out.println("\033[H\033[2J");
+        if(oldPosition!=car.getPosition()){
+            this.map.remove(oldPosition);
+            this.map.put(car.getPosition(),car);
         }
     }
 }

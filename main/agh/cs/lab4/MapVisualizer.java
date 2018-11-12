@@ -22,6 +22,7 @@ public class MapVisualizer {
      */
     public MapVisualizer(AbstractWorldMap map) {
         this.map = map;
+        System.out.print(map.getClass());
     }
 
     /**
@@ -74,7 +75,7 @@ public class MapVisualizer {
     }
 
     private String drawObject(Position currentPosition) {
-        String result = null;
+        String result;
         if (this.map.isOccupied(currentPosition)) {
             Object object = this.map.objectAt(currentPosition);
             if (object != null) {

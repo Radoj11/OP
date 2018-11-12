@@ -31,16 +31,18 @@ public class Car implements IMapElement {
             hl.add(new HayStack(new Position(2, 0)));
             //IWorldMap map = new RectangularMap(10,10);
             AbstractWorldMap map = new UnboundedMap(hl);
-            map.place(new Car(map));
-            map.place(new Car(map, new Position(3, 4)));
+            new Car(map);
+            new Car(map, new Position(3, 4));
             //System.out.println(map.toString());
             map.run(directions);
+            System.out.print(map.toString());
         }
         catch (IllegalArgumentException ex){
             System.out.print(ex.getMessage());
             return;
         }
     }
+
 
     public Car(){
         this.orientation=MapDirection.NORTH;
@@ -51,18 +53,14 @@ public class Car implements IMapElement {
         this.orientation=MapDirection.NORTH;
         this.position=new Position(2,2);
         this.myLovelyMap=map;
-        if(!map.place(this)){
-            throw new RuntimeException("Auto nie ma miejsca");
-        }
+        map.place(this);
     }
 
     public Car(AbstractWorldMap map, Position initialPosition){
         this.position=initialPosition;
         this.orientation=MapDirection.NORTH;
         this.myLovelyMap=map;
-        if(!map.place(this)){
-            throw new RuntimeException("Auto nie ma miejsca");
-        }
+        map.place(this);
     }
 
 
