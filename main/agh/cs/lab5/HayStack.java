@@ -19,6 +19,11 @@ public class HayStack implements IMapElement{
     public void move(MoveDirection dir){}
 
     @Override
+    public void positionChanged(Position oldPosition) {
+
+    }
+
+    @Override
     public String toString(){
         return "s";
     }

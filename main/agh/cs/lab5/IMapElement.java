@@ -5,7 +5,9 @@ import agh.cs.lab2.Position;
 
 public interface IMapElement {
 
-    public Position getPosition();
+    Position getPosition();
 
-    public void move(MoveDirection dir);
+    void move(MoveDirection dir);
+
+    void positionChanged(Position oldPosition);
 }

@@ -4,6 +4,7 @@ import agh.cs.lab2.MoveDirection;
 import agh.cs.lab2.Position;
 import agh.cs.lab3.Car;
 import agh.cs.lab4.MapVisualizer;
+import agh.cs.lab7.IPositionChangeObserver;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -11,7 +12,7 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
-public abstract class AbstractWorldMap {
+public abstract class AbstractWorldMap implements IPositionChangeObserver {
     protected LinkedHashMap<Position,IMapElement> map = new LinkedHashMap<>();
     protected MapVisualizer mapVisualizer;
 
@@ -57,6 +58,8 @@ public abstract class AbstractWorldMap {
     private void runHelper(MoveDirection dir, IMapElement car){
         Position oldPosition = car.getPosition();
         car.move(dir);
+        car.positionChanged(oldPosition);
+        //this.positionChanged(oldPosition,car.getPosition());
         try {
             System.out.print("\r"+this.toString());
             Thread.sleep(200);
@@ -64,9 +67,9 @@ public abstract class AbstractWorldMap {
             e.printStackTrace();
         }
         System.out.println("\033[H\033[2J");
-        if(oldPosition!=car.getPosition()){
-            this.map.remove(oldPosition);
-            this.map.put(car.getPosition(),car);
-        }
+    }
+
+    public void positionChanged(Position oldPosition, Position newPosition){
+        this.map.put(newPosition,this.map.remove(oldPosition));
     }
 }

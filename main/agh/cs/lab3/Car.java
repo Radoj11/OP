@@ -9,8 +9,10 @@ import agh.cs.lab5.AbstractWorldMap;
 import agh.cs.lab5.HayStack;
 import agh.cs.lab5.IMapElement;
 import agh.cs.lab5.UnboundedMap;
+import agh.cs.lab7.IPositionChangeObserver;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import static agh.cs.lab3.OptionsParser.parse;
@@ -19,6 +21,7 @@ public class Car implements IMapElement {
     private MapDirection orientation;
     private Position position;
     private AbstractWorldMap myLovelyMap;
+    private List<IPositionChangeObserver> observers = new LinkedList<>();
 
     public static void main(String[] args){
         try {
@@ -54,6 +57,7 @@ public class Car implements IMapElement {
         this.position=new Position(2,2);
         this.myLovelyMap=map;
         map.place(this);
+        this.addObserver(map);
     }
 
     public Car(AbstractWorldMap map, Position initialPosition){
@@ -61,6 +65,7 @@ public class Car implements IMapElement {
         this.orientation=MapDirection.NORTH;
         this.myLovelyMap=map;
         map.place(this);
+        this.addObserver(map);
     }
 
 
@@ -118,5 +123,20 @@ public class Car implements IMapElement {
             this.move(dir);
         }
 
+    }
+
+    private void addObserver(IPositionChangeObserver observer){
+        this.observers.add(observer);
+    }
+
+    private void removeObserver(IPositionChangeObserver observer){
+        this.observers.remove(observer);
+    }
+
+    @Override
+    public void positionChanged(Position oldPosition){
+        for(IPositionChangeObserver observer : this.observers){
+            observer.positionChanged(oldPosition,this.position);
+        }
     }
 }
