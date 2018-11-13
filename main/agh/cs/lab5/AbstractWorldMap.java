@@ -36,30 +36,26 @@ public abstract class AbstractWorldMap implements IPositionChangeObserver {
         return !isOccupied(position);
     }
 
-    public boolean place(Car car) throws IllegalArgumentException {
+    public void place(Car car) throws IllegalArgumentException {
         if(canMoveTo(car.getPosition())){
             this.map.put(car.getPosition(),car);
-            return true;
+            car.addObserver(this);
         }
         else{
             throw new IllegalArgumentException("this position is already occupied by " + this.objectAt(car.getPosition()).getClass());
         }
     }
 
-    public void run(List<MoveDirection> directions) { // tutaj trzeba zrobic na map bo lipa :(((((((
+    public void run(List<MoveDirection> directions) {
         AtomicInteger index = new AtomicInteger();
         List<IMapElement> onlyCarList = this.map.values().stream()
                 .filter(el -> el instanceof Car)
                 .collect(Collectors.toList());
-        directions.stream()
-                .forEach(el -> this.runHelper(el,onlyCarList.get(index.getAndIncrement()%onlyCarList.size())));
+        directions.forEach(el -> this.runHelper(el,onlyCarList.get(index.getAndIncrement()%onlyCarList.size())));
     }
 
     private void runHelper(MoveDirection dir, IMapElement car){
-        Position oldPosition = car.getPosition();
         car.move(dir);
-        car.positionChanged(oldPosition);
-        //this.positionChanged(oldPosition,car.getPosition());
         try {
             System.out.print("\r"+this.toString());
             Thread.sleep(200);

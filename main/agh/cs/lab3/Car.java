@@ -57,7 +57,6 @@ public class Car implements IMapElement {
         this.position=new Position(2,2);
         this.myLovelyMap=map;
         map.place(this);
-        this.addObserver(map);
     }
 
     public Car(AbstractWorldMap map, Position initialPosition){
@@ -65,7 +64,6 @@ public class Car implements IMapElement {
         this.orientation=MapDirection.NORTH;
         this.myLovelyMap=map;
         map.place(this);
-        this.addObserver(map);
     }
 
 
@@ -111,7 +109,7 @@ public class Car implements IMapElement {
         }
 
         if(this.myLovelyMap.canMoveTo(update))
-            this.position=update;
+            this.positionChanged(update);
     }
 
 
@@ -125,18 +123,19 @@ public class Car implements IMapElement {
 
     }
 
-    private void addObserver(IPositionChangeObserver observer){
+    public void addObserver(IPositionChangeObserver observer){
         this.observers.add(observer);
     }
 
-    private void removeObserver(IPositionChangeObserver observer){
+    public void removeObserver(IPositionChangeObserver observer){
         this.observers.remove(observer);
     }
 
     @Override
-    public void positionChanged(Position oldPosition){
+    public void positionChanged(Position newPosition){
         for(IPositionChangeObserver observer : this.observers){
-            observer.positionChanged(oldPosition,this.position);
+            observer.positionChanged(this.position,newPosition);
         }
+        this.position = newPosition;
     }
 }
